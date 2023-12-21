@@ -65,6 +65,17 @@ class Function:
     def backward(self, gys):
         raise NotImplementedError()
 
+class Square(Function):
+
+    def forward(self, x):
+        return x ** 2
+
+    def backward(self, gy):
+        x = self.inputs[0].data
+        return gy * 2 * x
+
+def square(x):
+    return Square()(x)
 
 class Add(Function):
     def forward(self, x0, x1):
@@ -78,14 +89,20 @@ class Add(Function):
 def add(x0, x1):
     return Add()(x0, x1)
 
-
-x = Variable(np.array(3.0))
-y = add(x, x)
+x = Variable(np.array(2.0))
+a = square(x) # reuse 
+y = add(square(a), square(a))
 y.backward()
+print(y.data)
 print(x.grad)
 
+#x = Variable(np.array(3.0))
+#y = add(x, x)
+#y.backward()
+#print(x.grad)
 
-x = Variable(np.array(3.0))  # or x.cleargrad()
-y = add(add(x, x), x)
-y.backward()
-print(x.grad)
+
+#x = Variable(np.array(3.0))  # or x.cleargrad()
+#y = add(add(x, x), x)
+#y.backward()
+#print(x.grad)

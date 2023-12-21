@@ -260,7 +260,7 @@ class ImageNet(Dataset):
 class SinCurve(Dataset):
 
     def prepare(self):
-        num_data = 1000
+        num_data = 10
         dtype = np.float64
 
         x = np.linspace(0, 2 * np.pi, num_data)
@@ -272,7 +272,9 @@ class SinCurve(Dataset):
             y = np.cos(x)
         y = y.astype(dtype)
         self.data = y[:-1][:, np.newaxis]
+        print(self.data)
         self.label = y[1:][:, np.newaxis]
+        print(self.label)
 
 
 class Shakespear(Dataset):

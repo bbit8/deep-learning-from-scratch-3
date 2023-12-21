@@ -115,14 +115,17 @@ class Transpose(Function):
 
     def forward(self, x):
         y = x.transpose(self.axes)
+        #print(y)
         return y
 
     def backward(self, gy):
+        print('axes', self.axes)
         if self.axes is None:
             return transpose(gy)
 
         axes_len = len(self.axes)
         inv_axes = tuple(np.argsort([ax % axes_len for ax in self.axes]))
+        print('inv_axes', inv_axes, axes_len)
         return transpose(gy, inv_axes)
 
 
@@ -263,6 +266,7 @@ class MatMul(Function):
         x, W = self.inputs
         gx = matmul(gy, W.T)
         gW = matmul(x.T, gy)
+        #print('bk', gx, gW)
         return gx, gW
 
 
@@ -446,6 +450,7 @@ def softmax_cross_entropy_simple(x, t):
     p = softmax(x)
     p = clip(p, 1e-15, 1.0)  # To avoid log(0)
     log_p = log(p)
+    print('log_p:', log_p, t, [np.arange(N), t.data])
     tlog_p = log_p[np.arange(N), t.data]
     y = -1 * sum(tlog_p) / N
     return y

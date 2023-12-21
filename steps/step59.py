@@ -41,6 +41,7 @@ for epoch in range(max_epoch):
     loss, count = 0, 0
 
     for x, t in train_set:
+        #print(x, t)
         x = x.reshape(1, 1)
         y = model(x)
         loss += F.mean_squared_error(y, t)

@@ -10,5 +10,5 @@ w = Variable(np.random.randn(3, 4))
 y = F.matmul(x, w)
 y.backward()
 
-print(x.grad.shape)
-print(w.grad.shape)
+print(x.grad)
+print(w.grad)

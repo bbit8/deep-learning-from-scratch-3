@@ -27,15 +27,19 @@ class Variable:
         seen_set = set()
 
         def add_func(f):
+            print(f)
             if f not in seen_set:
                 funcs.append(f)
                 seen_set.add(f)
                 funcs.sort(key=lambda x: x.generation)
+            else:
+                print('already add', f.inputs[0].data, f.outputs[0].data)
 
         add_func(self.creator)
 
         while funcs:
             f = funcs.pop()
+            #print(f)
             gys = [output.grad for output in f.outputs]
             gxs = f.backward(*gys)
             if not isinstance(gxs, tuple):
@@ -48,6 +52,7 @@ class Variable:
                     x.grad = x.grad + gx
 
                 if x.creator is not None:
+                    #print('x: ', self.data, x.creator)
                     add_func(x.creator)
 
 
@@ -108,9 +113,25 @@ def add(x0, x1):
 
 
 x = Variable(np.array(2.0))
-a = square(x)
-y = add(square(a), square(a))
+a = square(x) # reuse
+y = add(square(a), square(square(a)))
+
+'''
+print(x.generation) # 0
+a = square(x)       
+print(a.generation) # 1
+a1 = square(a)
+print(a1.generation) # 2
+a2 = square(a1)
+print(a2.generation) # 3
+y = add(a1, a2)
+'''
+
+print(y.generation) # 4
 y.backward()
 
 print(y.data)
 print(x.grad)
+print(a.grad)
+
+

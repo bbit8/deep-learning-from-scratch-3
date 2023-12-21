@@ -10,6 +10,7 @@ import dezero.functions as F
 np.random.seed(0)
 x = np.random.rand(100, 1)
 y = np.sin(2 * np.pi * x) + np.random.rand(100, 1)
+print(y)
 
 I, H, O = 1, 10, 1
 W1 = Variable(0.01 * np.random.randn(I, H))
@@ -22,6 +23,7 @@ def predict(x):
     y = F.linear(x, W1, b1)
     y = F.sigmoid(y)
     y = F.linear(y, W2, b2)
+    #print(y.shape)
     return y
 
 
